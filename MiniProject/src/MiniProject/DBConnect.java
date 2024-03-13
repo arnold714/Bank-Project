@@ -8,7 +8,7 @@ import java.sql.SQLException;
 //db연결해서 사용할 connection 객체를 반환
 public class DBConnect {
 	private static DBConnect dbconn = new DBConnect();
-	private String url = "jdbc:oracle:thin:@192.168.0.19:1521/xe";
+	private String url = "jdbc:oracle:thin:@localhost:1521/xe";
 	
 	private DBConnect() {}
 	
