@@ -11,7 +11,7 @@ public class AccountDao {
 	}
 	//insert
 	//계좌 추가(상품 가입)
-	 public void addAccount(Account a) {
+	 public void insert(Account a) {
 	 } 
 	 
 	 //select
@@ -26,7 +26,7 @@ public class AccountDao {
 	   
 	  //update
 	  //입금(입금 금액 추가)
-	  public void deposit(Account a) {
+	  public void update(Account a) {
 	  }
 	  //예금:출금/승인or거절 추가 
 	  
