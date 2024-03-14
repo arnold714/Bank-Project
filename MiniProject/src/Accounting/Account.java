@@ -8,18 +8,18 @@ public class Account {
 	//계좌주 id
 	private String id;
 	//금액(잔액)
-	private int num;
+	private int balance;
 	//가입일
 	private Date date;
 	//예금:승인여부
-	//적금:만기일
+	//적금:만기일,이자율
 	
 	public Account() {}
 	
-	public Account(int account_num, String id, int num, Date date) {
+	public Account(int account_num, String id, int balance, Date date) {
 		this.account_num = account_num;
 		this.id = id;
-		this.num = num;
+		this.balance = balance;
 		this.date = date;
 	}
 	
@@ -36,11 +36,11 @@ public class Account {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public int getNum() {
-		return num;
+	public int getBalance() {
+		return balance;
 	}
-	public void setNum(int num) {
-		this.num = num;
+	public void setBalance(int balance) {
+		this.balance = balance;
 	}
 	public Date getDate() {
 		return date;
@@ -51,7 +51,6 @@ public class Account {
 
 	@Override
 	public String toString() {
-		return "Account [account_num=" + account_num + ", id=" + id + ", num=" + num + ", date=" + date + "]";
+		return "Account [account_num=" + account_num + ", id=" + id + ", balance=" + balance + ", date=" + date + "]";
 	}
-		
 }
