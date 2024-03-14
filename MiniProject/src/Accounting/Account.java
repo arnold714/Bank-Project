@@ -12,7 +12,7 @@ public class Account {
 	//가입일
 	private Date date;
 	//예금:승인여부
-	//적금:만기일
+	//적금:만기일,이자율
 	
 	public Account() {}
 	
