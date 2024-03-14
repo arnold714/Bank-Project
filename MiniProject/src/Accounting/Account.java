@@ -12,7 +12,12 @@ public class Account {
 	//가입일
 	private Date date;
 	//예금:승인여부
-	//적금:만기일,이자율
+	
+	//적금:만기일
+	private Date expDate;
+	//적금:이자율
+	private Float doublepercent;
+	
 	
 	public Account() {}
 	
