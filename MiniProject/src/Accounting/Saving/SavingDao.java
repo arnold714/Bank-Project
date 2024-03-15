@@ -18,16 +18,16 @@ public class SavingDao{
 	}
 	
 	//계좌 생성
-	public void insert(Saving s) {
+	public void insert(Saving s,int num) {
 		Connection conn = db.conn();
 		//Account_num(계좌번호),String id(계좌주),int balance(잔액),Date date(가입일),
 		//Date expDate(만기일),double doublePercent(이자율)
-		String sql = "insert into Saving values(seq.nextvalue,?,?,sysdate,0,?)";
+		String sql = "insert into Saving values(seq.nextvalue,?,?,sysdate,add_months(sysdate,?),?,0)";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, s.getId());
 			pstmt.setInt(2, s.getBalance());
-			pstmt.setDate(3, s.getExpDate());
+			pstmt.setInt(3, num);
 			pstmt.setDouble(4, s.getDoublepercent());
 			int cnt = pstmt.executeUpdate();
 			System.out.println(s.getBalance() + "개설 되었습니다.");
@@ -39,16 +39,16 @@ public class SavingDao{
 		}
 	}
 	//내 적금 계좌 전체 조회
-	public ArrayList<Saving> SelectAll(int id) {
+	public ArrayList<Saving> SelectAll(String id) {
 		Connection conn = db.conn();
 		String sql = "select * from Saving where id =?";
 		ArrayList<Saving> list = new ArrayList<Saving>();
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, id);
+			pstmt.setString(1, id);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				list.add(new Saving(rs.getInt(1), rs.getString(2), rs.getInt(3),rs.getDate(4), rs.getDate(5), rs.getDouble(5)));
+				list.add(new Saving(rs.getInt(1), rs.getString(2), rs.getInt(3),rs.getDate(4), rs.getDate(5), rs.getDouble(6),rs.getInt(7)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -75,6 +75,7 @@ public class SavingDao{
 				s.setDate(rs.getDate(4));
 				s.setExpDate(rs.getDate(5));
 				s.setDoublepercent(rs.getDouble(6));
+				s.setExpiry(rs.getInt(7));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -84,17 +85,37 @@ public class SavingDao{
 		}
 		return s;
 	}
-	//입금 추가
-	public int update(Saving s) {
+	//만기일 조회
+	//만기 전에는 1, 만기 당일 or 만기 날에는 음수 반환
+	public int getDate(int num) {
 		Connection conn = db.conn();
-		String sql = "update saving set blance=blance+? where account_num=?";
+		String sql = "select round(expdate - sysdate,0) from Saving where account_num=?;";
+		int x = 1;
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {conn.close();} 
+			catch (SQLException e) {e.printStackTrace();}
+		}
+		return x;
+	}
+	//입금 추가
+	public void update(Saving s,int num) {
+		Connection conn = db.conn();
+		String sql = "update saving set balance=balance+? where account_num=?";
 		int cnt = 0;
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, s.getBalance());
+			pstmt.setInt(1, num);
 			pstmt.setInt(2, s.getAccount_num());
 			cnt = pstmt.executeUpdate();
-			System.out.println(cnt + " 줄이 수정됨");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,9 +123,23 @@ public class SavingDao{
 			try {conn.close();} 
 			catch (SQLException e) {e.printStackTrace();}
 		}
-		return cnt;
 	}
-
+	//만기 이자 추가
+	public void updateExp(Saving s) {
+		Connection conn = db.conn();
+		String sql = "update saving set balance=balance+balance*Round(percent*(MONTHS_BETWEEN(expDate , newdate))/12,2), expiry=1 where account_num=?";
+		int cnt = 0;
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, s.getAccount_num());
+			cnt = pstmt.executeUpdate();
+		} catch (SQLException e) {e.printStackTrace();
+		} finally {
+			try {conn.close();} 
+			catch (SQLException e) {e.printStackTrace();}
+		}
+	}
+	//계좌 삭제
 	public void delete(int num) {
 		Connection conn = db.conn();
 		String sql = "delete from saving where account_num=?";
@@ -113,7 +148,7 @@ public class SavingDao{
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			cnt = pstmt.executeUpdate();
-			System.out.println(num+ "계좌 탈회");
+			System.out.println(num+ "계좌 탈회가 완료되었습니다.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -121,6 +156,4 @@ public class SavingDao{
 			catch (SQLException e) {e.printStackTrace();}
 		}
 	}
-	
-
 }
