@@ -29,7 +29,7 @@ public class AccountService {
 		} else {
 			if (MembersService.loginId.equals(account.getId())) {//
 				System.out.println(account);
-				System.out.println("1.입금하기 2.송금하기 3.계좌내역보기 4.계좌삭제하기");
+				System.out.println("1.입금하기 2.출금하기 3.송금하기 3.계좌내역보기 4.계좌삭제하기");
 				int x = sc.nextInt();
 				switch (x) {
 				case 1:
@@ -41,9 +41,13 @@ public class AccountService {
 					System.out.println(dao.selectByNum(account_num));
 					break;
 				case 3:
-					// 계좌내역보기
+					remittance(sc, account_num);
+					System.out.println(dao.selectByNum(account_num));
 					break;
 				case 4:
+					// 계좌내역보기
+					break;
+				case 5:
 					delAccount(account_num);
 					break;
 				}
@@ -80,8 +84,9 @@ public class AccountService {
 		while (money < 0) {
 			System.out.println("다시 입력해 주십시오.");
 			money = sc.nextInt();
-		};
-		dao.update(money,account_num);
+		}
+		;
+		dao.update(money, account_num);
 		System.out.println("입금이 완료되었습니다.");
 	}
 
@@ -89,15 +94,37 @@ public class AccountService {
 		System.out.println("==출금==");
 		System.out.println("얼마를 출금하시겠습니까?");
 		int money = sc.nextInt();
-		while(money<0) {
+		while (money < 0) {
 			System.out.println("다시 입력해 주십시오.");
 			money = sc.nextInt();
 		}
 		if (dao.selectByNum(account_num).getBalance() < money) {
 			System.out.println("계좌에 잔액이 부족합니다.");
 		} else {
-			dao.update(money*-1,account_num);
+			dao.update(money * -1, account_num);
 			System.out.println("출금이 완료되었습니다.");
+		}
+	}
+
+	public void remittance(Scanner sc, String account_num) {
+		System.out.println("==송금==");
+		System.out.println("송금받을 계좌를 입력해 주십시오.");
+		String remit_num = sc.next();
+		System.out.println(MembersService.name + "님에게 송금하시겠습니까? 1.예 2.아니오");
+		if (sc.nextInt() == 1) {
+			System.out.println("얼마를 출금하시겠습니까?");
+			int money = sc.nextInt();
+			while (money < 0) {
+				System.out.println("다시 입력해 주십시오.");
+				money = sc.nextInt();
+			}
+			if (dao.selectByNum(account_num).getBalance() < money) {
+				System.out.println("계좌에 잔액이 부족합니다.");
+			} else {
+				dao.update(money * -1, account_num);
+				dao.update(money, remit_num);
+				System.out.println("이체가 완료되었습니다.");
+			}
 		}
 	}
 
