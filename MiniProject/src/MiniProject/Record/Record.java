@@ -3,23 +3,31 @@ package MiniProject.Record;
 import java.sql.Date;
 
 public class Record {
-	private int num;
+	//레코드 번호
+	private int num; 
+	//계좌번호
 	private int account_num;
+	//입금,출금액
 	private int money;
-	private String name;
-	private Date newDate;
+	//입금,출금자명
+	private String name; 
+	//금액(잔액)
+	private int balnace;
+	//거래일
+	private Date newDate; 
 	
 	public Record() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Record(int num, int account_num, int money, String name, Date newDate) {
+	public Record(int num, int account_num, int money, String name, int balnace, Date newDate) {
 		super();
 		this.num = num;
 		this.account_num = account_num;
 		this.money = money;
 		this.name = name;
+		this.balnace = balnace;
 		this.newDate = newDate;
 	}
 
@@ -55,6 +63,14 @@ public class Record {
 		this.name = name;
 	}
 
+	public int getBalnace() {
+		return balnace;
+	}
+
+	public void setBalnace(int balnace) {
+		this.balnace = balnace;
+	}
+
 	public Date getNewDate() {
 		return newDate;
 	}
@@ -66,8 +82,9 @@ public class Record {
 	@Override
 	public String toString() {
 		return "Record [num=" + num + ", account_num=" + account_num + ", money=" + money + ", name=" + name
-				+ ", newDate=" + newDate + "]";
+				+ ", balnace=" + balnace + ", newDate=" + newDate + "]";
 	}
+	
 	
 	
 
