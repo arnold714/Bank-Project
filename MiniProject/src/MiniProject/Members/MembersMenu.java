@@ -2,11 +2,15 @@ package MiniProject.Members;
 
 import java.util.Scanner;
 
+import Accounting.AccountService;
+
 public class MembersMenu {
 	private MembersService mservice;
+	private AccountService aservice;
 	
 	public MembersMenu() {
 		mservice = new MembersService();
+		aservice = new AccountService();
 	}
 	
 	public void run(Scanner sc) {
@@ -48,7 +52,7 @@ public class MembersMenu {
 	public void runMemLogin(Scanner sc) {
 		boolean flag = true;
 		while(flag) {
-			System.out.println("1.내정보확인 2.내정보수정 3.로그아웃 4.탈퇴 5.게시판 6.종료");
+			System.out.println("1.내정보확인 2.내정보수정 3.로그아웃 4.탈퇴 5.나의 계좌 6.종료");
 			int m = sc.nextInt();
 			switch(m) {
 			case 1:
@@ -64,9 +68,31 @@ public class MembersMenu {
 				mservice.delMembers();
 				return;
 			case 5:
-				//
+				runAccount(sc);
 				break;
 			case 6:
+				flag = false;
+				break;
+			}
+		}
+	}
+	
+	public void runAccount(Scanner sc) {
+		boolean flag = true;
+		while(flag) {
+			System.out.println("1.계좌선택 2.계좌추가 3.전체계좌 4.종료");
+			int m = sc.nextInt();
+			switch(m) {
+			case 1:
+				aservice.getByNum(sc);
+				break;
+			case 2:
+				aservice.addAccount(MembersService.loginId);
+				break;
+			case 3:
+				aservice.getAll();
+				break;
+			case 4:
 				flag = false;
 				break;
 			}

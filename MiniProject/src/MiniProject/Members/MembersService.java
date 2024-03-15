@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class MembersService {
 	private MembersDao dao;
 	public static String loginId;
+	public static boolean auth;
 
 	public MembersService() {
 		dao = new MembersDao();
@@ -44,6 +45,7 @@ public class MembersService {
 			if (pwd.equals(m.getPwd())) {
 				System.out.println("로그인 성공");
 				loginId = id;
+				auth = dao.select(id).getAuth();
 				flag = true;
 			} else {
 				System.out.println("패스워드 실패");
