@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 import MiniProject.Members.Members;
 
-
 public class SavingService {
 	private SavingDao dao;
 	public static String loginId;
@@ -50,17 +49,25 @@ public class SavingService {
 		int account_num = sc.nextInt();
 		//계좌의 주인일 때도 조회.
 		Saving s = dao.selectByNum(account_num);
+		int num =0;
 		if(s.equals(null)|| !s.getId().equals(loginId)) {
 			System.out.println("접근할 수 없는 계좌입니다.");
 			return;
 		}
-		if(dao.getDate(account_num)>0){
-			System.out.println("만기 전 계좌입니다.");
-			return;
+		System.out.println("1.입금 2.출금");
+		int sel = sc.nextInt();
+		if(sel==1) {
+			System.out.print("입금 금액을 입력하세요:");
+			num= sc.nextInt();
+			dao.update(s, num);
+		}else {
+			if(dao.getDate(account_num)>0){
+				System.out.println("만기 전 도중 출금이 됩니다.");
+			}
+			System.out.print("출금 금액을 입력하세요:");
+			num = sc.nextInt();
+			dao.update(s, num*(-1));
 		}
-		System.out.print("출금 금액을 입력하세요:");
-		int num = sc.nextInt();
-		dao.update(s, (num*-1));
 	}
 	//계좌 번호 조회
 	public void selectSaving(Scanner sc) {
