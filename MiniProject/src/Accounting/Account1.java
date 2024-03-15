@@ -30,4 +30,11 @@ public class Account1 extends Account{
 		this.setBalance(balance);
 	}
 
+	@Override
+	public String toString() {
+		return "Account1 [getAccount_num()=" + getAccount_num() + ", getId()=" + getId()
+				+ ", getBalance()=" + getBalance() + ", getDate()=" + getDate()+", allow="+allow+"]";
+	}
+
+
 }

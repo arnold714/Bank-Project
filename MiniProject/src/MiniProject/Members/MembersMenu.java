@@ -52,7 +52,7 @@ public class MembersMenu {
 	public void runMemLogin(Scanner sc) {
 		boolean flag = true;
 		while(flag) {
-			System.out.println("1.내정보확인 2.내정보수정 3.로그아웃 4.탈퇴 5.나의 계좌 6.종료");
+			System.out.println("1.내정보확인 2.내정보수정 3.로그아웃 4.탈퇴 5.나의 계좌 6.관리자메뉴 7.종료");
 			int m = sc.nextInt();
 			switch(m) {
 			case 1:
@@ -71,6 +71,13 @@ public class MembersMenu {
 				runAccount(sc);
 				break;
 			case 6:
+				if(MembersService.auth==true) {
+					runManager(sc);
+				}else {
+					System.out.println("관리자가 아닙니다.");
+				}
+				break;
+			case 7:
 				flag = false;
 				break;
 			}
@@ -93,6 +100,50 @@ public class MembersMenu {
 				aservice.getAll();
 				break;
 			case 4:
+				flag = false;
+				break;
+			}
+		}
+	}
+	
+	public void runManager(Scanner sc) {
+		boolean flag = true;
+		while(flag) {
+			System.out.println("1.전회원 보기 2.전계좌 보기 3.모든거래내역 보기 4.승인업무처리 5.종료");
+			int m = sc.nextInt();
+			switch(m) {
+			case 1:
+				mservice.printAll();
+				break;
+			case 2:
+				aservice.getAll();
+				break;
+			case 3:
+				//거래내역보기
+				break;
+			case 4:
+				runApproval(sc);
+				break;
+			case 5:
+				flag = false;
+				break;
+			}
+		}
+	}
+	
+	public void runApproval(Scanner sc) {
+		boolean flag = true;
+		while(flag) {
+			System.out.println("1.계좌승인업무 2.관리자승인업무 3.종료");
+			int m = sc.nextInt();
+			switch(m) {
+			case 1:
+				aservice.getAccountApproval(sc);
+				break;
+			case 2:
+				mservice.membersApproval(sc);
+				break;
+			case 3:
 				flag = false;
 				break;
 			}

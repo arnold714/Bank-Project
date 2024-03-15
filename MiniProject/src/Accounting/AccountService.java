@@ -137,4 +137,29 @@ public class AccountService {
 			System.out.println("계좌에 잔액이 없어야 삭제할 수 있습니다.");
 		}
 	}
+
+	
+	public void getAccountApproval(Scanner sc) {
+		Boolean flag = true;
+		while (flag) {
+			System.out.println("1.승인대기 계좌보기 2.계좌승인하기 3.종료");
+			int m = sc.nextInt();
+			switch (m) {
+			case 1:
+				for(Account1 a : dao.SelectAllAccountApproval()) {
+					System.out.println(a);
+				}
+				;
+				break;
+			case 2:
+				System.out.println("승인할 계좌를 입력하시오");
+				dao.approval(sc.next());
+				break;
+			case 3:
+				flag = false;
+				break;
+			}
+		}
+	}
+	
 }
