@@ -48,7 +48,7 @@ public class SavingDao{
 			pstmt.setString(1, id);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				list.add(new Saving(rs.getInt(1), rs.getString(2), rs.getInt(3),rs.getDate(4), rs.getDate(5), rs.getDouble(6),rs.getInt(7)));
+				list.add(new Saving(rs.getString(1), rs.getString(2), rs.getInt(3),rs.getDate(4), rs.getDate(5), rs.getDouble(6),rs.getInt(7)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -59,17 +59,17 @@ public class SavingDao{
 		return list;
 	}
 	//계좌 번호로 조회
-	public Saving selectByNum(int num) {
+	public Saving selectByNum(String num) {
 		Connection conn = db.conn();
 		String sql = "select * from Saving where Account_num=?";
 		Saving s = null;
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, num);
+			pstmt.setString(1, num);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				s = new Saving();
-				s.setAccount_num(rs.getInt(1));
+				s.setAccount_num(rs.getString(1));
 				s.setId(rs.getString(2));
 				s.setBalance(rs.getInt(3));
 				s.setDate(rs.getDate(4));
@@ -87,13 +87,13 @@ public class SavingDao{
 	}
 	//만기일 조회
 	//만기 전에는 1, 만기 당일 or 만기 날에는 음수 반환
-	public int getDate(int num) {
+	public int getDate(String num) {
 		Connection conn = db.conn();
 		String sql = "select round(expdate - sysdate,0) from Saving where account_num=?;";
 		int x = 1;
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, num);
+			pstmt.setString(1, num);
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				return rs.getInt(1);
@@ -114,7 +114,7 @@ public class SavingDao{
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
-			pstmt.setInt(2, s.getAccount_num());
+			pstmt.setString(2, s.getAccount_num());
 			cnt = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -131,7 +131,7 @@ public class SavingDao{
 		int cnt = 0;
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, s.getAccount_num());
+			pstmt.setString(1, s.getAccount_num());
 			cnt = pstmt.executeUpdate();
 		} catch (SQLException e) {e.printStackTrace();
 		} finally {
@@ -140,13 +140,13 @@ public class SavingDao{
 		}
 	}
 	//계좌 삭제
-	public void delete(int num) {
+	public void delete(String num) {
 		Connection conn = db.conn();
 		String sql = "delete from saving where account_num=?";
 		int cnt = 0;
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, num);
+			pstmt.setString(1, num);
 			cnt = pstmt.executeUpdate();
 			System.out.println(num+ "계좌 탈회가 완료되었습니다.");
 		} catch (SQLException e) {

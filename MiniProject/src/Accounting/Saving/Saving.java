@@ -13,7 +13,7 @@ public class Saving extends Account {
 	public Saving() {
 		super();
 	}
-	public Saving(int account_num, String id, int balance, Date date,Date expDate,double doublepercent,int expiry) {
+	public Saving(String account_num, String id, int balance, Date date,Date expDate,double doublepercent,int expiry) {
 		super(account_num, id, balance, date);
 		this.expDate = expDate;
 		this.doublepercent = doublepercent;
