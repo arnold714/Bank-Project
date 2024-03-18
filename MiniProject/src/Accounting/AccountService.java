@@ -3,13 +3,16 @@ package Accounting;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import MiniProject.Members.MembersDao;
 import MiniProject.Members.MembersService;
 
 public class AccountService {
 	private AccountDao dao;
+	private MembersDao mdao;
 
 	public AccountService() {
 		dao = new AccountDao();
+		mdao = new MembersDao();
 	}
 
 	public void addAccount(String id) {
@@ -126,7 +129,7 @@ public class AccountService {
 		System.out.println("==송금==");
 		System.out.println("송금받을 계좌를 입력해 주십시오.");
 		String remit_num = sc.next();
-		System.out.println(MembersService.name + "님에게 송금하시겠습니까? 1.예 2.아니오");
+		System.out.println(mdao.select(dao.selectByNum(remit_num).getId()).getName() + "님에게 송금하시겠습니까? 1.예 2.아니오");
 		if (sc.nextInt() == 1) {
 			System.out.println("얼마를 출금하시겠습니까?");
 			int money = sc.nextInt();
