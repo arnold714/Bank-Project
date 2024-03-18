@@ -4,14 +4,20 @@ import java.util.Scanner;
 
 import Accounting.Account1;
 import MiniProject.Members.Members;
+import MiniProject.Members.MembersDao;
 import MiniProject.Members.MembersService;
+import MiniProject.Record.RecordService;
 
 public class SavingService {
 	private SavingDao dao;
 	public static String loginId;
+	private RecordService rs;
+	private MembersDao mdao;
 
 	public SavingService() {
 		dao = new SavingDao();
+		rs = new RecordService();
+		mdao = new MembersDao();
 	}
 	
 	//계좌 추가
@@ -55,7 +61,12 @@ public class SavingService {
 			int x = sc.nextInt();
 			switch (x) {
 			case 1:
-				deposit(sc,s,account_num);
+				//만기일 지나면 입금 막기
+				if(dao.getDate(account_num)>0) {
+					deposit(sc,s,account_num);
+					break;
+				}
+				System.out.println("만기일이 지나 입금 할 수 없습니다.");
 				break;
 			case 2:
 				withdraw(sc,s, account_num);
@@ -97,8 +108,9 @@ public class SavingService {
 			System.out.println("다시 입력해 주십시오.");
 			money = sc.nextInt();
 		};
-		dao.update(s, money);
+		dao.update(money,account_num);
 		System.out.println("입금이 완료되었습니다.");
+		rs.addRecord(account_num,money, MembersService.name ,dao.selectByNum(account_num).getBalance(),1,loginId);
 	}
 	//출금
 	public void withdraw(Scanner sc,Saving s, String account_num) {
@@ -112,12 +124,41 @@ public class SavingService {
 		if (s.getBalance() < money) {
 			System.out.println("계좌에 잔액이 부족합니다.");
 		} else {
-			dao.update(s,money*(-1));
+			dao.update(money * -1, account_num);
 			System.out.println("출금이 완료되었습니다.");
+			rs.addRecord(account_num,money*(-1), MembersService.name ,dao.selectByNum(account_num).getBalance(),2,loginId);
 		}
 	}
 	
-	
+	//송금
+	public void remittance(Scanner sc, String account_num) {
+		System.out.println("==송금==");
+		System.out.println("송금받을 계좌를 입력해 주십시오.");
+		String remit_num = sc.next();
+		int money = 0;
+		System.out.println(mdao.select(dao.selectByNum(remit_num).getId()).getName() + "님에게 송금하시겠습니까? 1.예 2.아니오");
+		if (sc.nextInt() == 1) {
+			System.out.println("얼마를 출금하시겠습니까?");
+			money = sc.nextInt();
+			while (money < 0) {
+				System.out.println("다시 입력해 주십시오.");
+				money = sc.nextInt();
+			}
+			if (dao.selectByNum(account_num).getBalance() < money) {
+				System.out.println("계좌에 잔액이 부족합니다.");
+			} else {
+				dao.update(money * -1, account_num);
+				dao.update(money, remit_num);
+				System.out.println("이체가 완료되었습니다.");
+				//입금 받을 사람(+//입금)
+				//계좌받기,금액 받기
+				//자동용>입금자의 이름,잔액,아이디
+				rs.addRecord(remit_num,money, mdao.select(dao.selectByNum(remit_num).getId()).getName() ,dao.selectByNum(remit_num).getBalance(),1,dao.selectByNum(remit_num).getId());
+				//입금 하는 사람(-//출금)
+				rs.addRecord(account_num,money*(-1), MembersService.name ,dao.selectByNum(account_num).getBalance(),2,MembersService.loginId);
+			}
+		}
+	}
 	//계좌 번호 조회
 	public void selectSaving(Scanner sc) {
 		System.out.println("계좌 확인");
