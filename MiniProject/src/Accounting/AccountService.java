@@ -3,16 +3,19 @@ package Accounting;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import MiniProject.Members.MembersDao;
 import MiniProject.Members.MembersService;
 import MiniProject.Record.RecordService;
 
 public class AccountService {
 	private AccountDao dao;
 	private RecordService rs;
+	private MembersDao mdao;
 
 	public AccountService() {
 		dao = new AccountDao();
 		rs = new RecordService();
+		mdao = new MembersDao();
 	}
 
 	public void addAccount(String id) {
@@ -132,10 +135,11 @@ public class AccountService {
 		System.out.println("==송금==");
 		System.out.println("송금받을 계좌를 입력해 주십시오.");
 		String remit_num = sc.next();
-		System.out.println(MembersService.name + "님에게 송금하시겠습니까? 1.예 2.아니오");
+		int money = 0;
+		System.out.println(mdao.select(dao.selectByNum(remit_num).getId()).getName() + "님에게 송금하시겠습니까? 1.예 2.아니오");
 		if (sc.nextInt() == 1) {
 			System.out.println("얼마를 출금하시겠습니까?");
-			int money = sc.nextInt();
+			money = sc.nextInt();
 			while (money < 0) {
 				System.out.println("다시 입력해 주십시오.");
 				money = sc.nextInt();
@@ -148,10 +152,10 @@ public class AccountService {
 				System.out.println("이체가 완료되었습니다.");
 				//입금 받을 사람(+//입금)
 				//계좌받기,금액 받기
-				//자동용>입금자의 이름,잔액,아이디(계좌를 받으면 아이디 반환하는 서비스 추가하기)
-				rs.addRecord(remit_num,money, MembersService.name ,dao.selectByNum(remit_num).getBalance(),1,MembersService.);
+				//자동용>입금자의 이름,잔액,아이디
+				rs.addRecord(remit_num,money, mdao.select(dao.selectByNum(remit_num).getId()).getName() ,dao.selectByNum(remit_num).getBalance(),1,dao.selectByNum(remit_num).getId());
 				//입금 하는 사람(-//출금)
-				rs.addRecord(account_num,money, MembersService.name ,dao.selectByNum(account_num).getBalance(),2,MembersService.loginId);
+				rs.addRecord(account_num,money*(-1), MembersService.name ,dao.selectByNum(account_num).getBalance(),2,MembersService.loginId);
 			}
 		}
 	}
