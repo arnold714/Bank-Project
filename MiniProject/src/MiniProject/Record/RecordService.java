@@ -36,21 +36,22 @@ public class RecordService {
 	}
 	
 //	getByDate: 날짜에 해당하는 거래내역 출력
-	public void getByDate(Scanner sc, Scanner sc1, String account_num) {
-		System.out.println("=== 해당 날짜 거래내역 조회 ===");
-		System.out.println("거래일(년/월/일):");
-		String date = sc.next();
-		String date1 = sc1.next();
-		ArrayList<Record> list = dao.selectByDate(date,date1, account_num);
-		if (list.isEmpty()) {
-			System.out.println("검색된 결과 없음");
-		} else {
-			for (Record r: list) {
-				System.out.println(r);
-			}
-		}
-		
-	}
+	   public void getByDate(Scanner sc, String account_num) {
+		      System.out.println("=== 해당 날짜 거래내역 조회 ===");
+		      System.out.println("시작 거래일(년/월/일):");
+		      String date = sc.next();
+		      System.out.println("마지막 거래일(년/월/일):");
+		      String date1 = sc.next();
+		      ArrayList<Record> list = dao.selectByDate(date,date1, account_num);
+		      if (list.isEmpty()) {
+		         System.out.println("검색된 결과 없음");
+		      } else {
+		         for (Record r: list) {
+		            System.out.println(r);
+		         }
+		      }
+		      
+		   }
 	
 //	getByDeposit: 입금에 해당하는 거래내역 출력	
 	public void getByDeposit(Scanner sc, String account_num) {
