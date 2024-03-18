@@ -29,22 +29,38 @@ public class AccountService {
 		} else {
 			if (MembersService.loginId.equals(account.getId())) {//
 				System.out.println(account);
-				System.out.println("1.입금하기 2.출금하기 3.송금하기 3.계좌내역보기 4.계좌삭제하기");
+				System.out.println("1.입금하기 2.출금하기 3.송금하기 4.계좌내역보기 5.계좌삭제하기");
 				int x = sc.nextInt();
 				switch (x) {
 				case 1:
+					if(account.getAllow()==false) {
+						System.out.println("승인되지 않은 계좌입니다.");
+						break;
+					}
 					deposit(sc, account_num);
 					System.out.println(dao.selectByNum(account_num));
 					break;
 				case 2:
+					if(account.getAllow()==false) {
+						System.out.println("승인되지 않은 계좌입니다.");
+						break;
+					}
 					withdraw(sc, account_num);
 					System.out.println(dao.selectByNum(account_num));
 					break;
 				case 3:
+					if(account.getAllow()==false) {
+						System.out.println("승인되지 않은 계좌입니다.");
+						break;
+					}
 					remittance(sc, account_num);
 					System.out.println(dao.selectByNum(account_num));
 					break;
 				case 4:
+					if(account.getAllow()==false) {
+						System.out.println("승인되지 않은 계좌입니다.");
+						break;
+					}
 					// 계좌내역보기
 					break;
 				case 5:
