@@ -6,7 +6,7 @@ public class Record {
 	//레코드 번호
 	private int num; 
 	//계좌번호
-	private int account_num;
+	private String account_num;
 	//입금,출금액
 	private int money;
 	//입금,출금자명
@@ -18,6 +18,7 @@ public class Record {
 	//거래 구분: 예금 or 출금
 	private int isDeposit; //1이면 입금 ,2이면 출금
 	
+	private String id;
 
 
 	public Record() {
@@ -26,7 +27,7 @@ public class Record {
 	}
 
 
-	public Record(int num, int account_num, int money, String name, int balnace, Date newDate, int isDeposit) {
+	public Record(int num, String  account_num, int money, String name, int balnace, Date newDate, int isDeposit,String id) {
 		super();
 		this.num = num;
 		this.account_num = account_num;
@@ -35,6 +36,7 @@ public class Record {
 		this.balnace = balnace;
 		this.newDate = newDate;
 		this.isDeposit = isDeposit;
+		this.id = id;
 	}
 
 	public int getNum() {
@@ -45,11 +47,11 @@ public class Record {
 		this.num = num;
 	}
 
-	public int getAccount_num() {
+	public String  getAccount_num() {
 		return account_num;
 	}
 
-	public void setAccount_num(int account_num) {
+	public void setAccount_num(String  account_num) {
 		this.account_num = account_num;
 	}
 
@@ -94,14 +96,21 @@ public class Record {
 	}
 	
 
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Record [num=" + num + ", account_num=" + account_num + ", money=" + money + ", name=" + name
-				+ ", balnace=" + balnace + ", newDate=" + newDate + ", isDeposit=" + isDeposit + "]";
+				+ ", balnace=" + balnace + ", newDate=" + newDate + ", isDeposit=" + isDeposit + ", id=" + id + "]";
 	}
 
-	
-	
-	
 
 } 

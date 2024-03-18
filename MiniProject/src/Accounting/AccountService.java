@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import MiniProject.Members.MembersService;
+import MiniProject.Record.RecordService;
 
 public class AccountService {
 	private AccountDao dao;
+	private RecordService rs;
 
 	public AccountService() {
 		dao = new AccountDao();
+		rs = new RecordService();
 	}
 
 	public void addAccount(String id) {
@@ -61,6 +64,7 @@ public class AccountService {
 						System.out.println("승인되지 않은 계좌입니다.");
 						break;
 					}
+					rs.getAll(account_num);
 					// 계좌내역보기
 					break;
 				case 5:
@@ -104,6 +108,7 @@ public class AccountService {
 		;
 		dao.update(money, account_num);
 		System.out.println("입금이 완료되었습니다.");
+		rs.addRecord(account_num,money, MembersService.name ,dao.selectByNum(account_num).getBalance(),1,MembersService.loginId);
 	}
 
 	public void withdraw(Scanner sc, String account_num) {
@@ -119,6 +124,7 @@ public class AccountService {
 		} else {
 			dao.update(money * -1, account_num);
 			System.out.println("출금이 완료되었습니다.");
+			rs.addRecord(account_num,money*(-1), MembersService.name ,dao.selectByNum(account_num).getBalance(),2,MembersService.loginId);
 		}
 	}
 
@@ -140,6 +146,12 @@ public class AccountService {
 				dao.update(money * -1, account_num);
 				dao.update(money, remit_num);
 				System.out.println("이체가 완료되었습니다.");
+				//입금 받을 사람(+//입금)
+				//계좌받기,금액 받기
+				//자동용>입금자의 이름,잔액,아이디(계좌를 받으면 아이디 반환하는 서비스 추가하기)
+				rs.addRecord(remit_num,money, MembersService.name ,dao.selectByNum(remit_num).getBalance(),1,MembersService.);
+				//입금 하는 사람(-//출금)
+				rs.addRecord(account_num,money, MembersService.name ,dao.selectByNum(account_num).getBalance(),2,MembersService.loginId);
 			}
 		}
 	}
