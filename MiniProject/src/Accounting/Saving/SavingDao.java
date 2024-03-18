@@ -47,7 +47,7 @@ public class SavingDao{
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
 			ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) {
+			while(rs.next()) {
 				list.add(new Saving(rs.getString(1), rs.getString(2), rs.getInt(3),rs.getDate(4), rs.getDate(5), rs.getDouble(6),rs.getInt(7)));
 			}
 		} catch (SQLException e) {
@@ -87,9 +87,9 @@ public class SavingDao{
 	}
 	//만기일 조회
 	//만기 전에는 1, 만기 당일 or 만기 날에는 음수 반환
-	public int getDate(String num) {
+	public int getExpDate(String num) {
 		Connection conn = db.conn();
-		String sql = "select round(expdate - sysdate,0) from Saving where account_num=?;";
+		String sql = "select round(expdate - sysdate,0) from Saving where account_num=?";
 		int x = 1;
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);

@@ -39,7 +39,7 @@ public class SavingService {
 			}else {
 				per = 0.9;
 			};
-			dao.insert(new Saving("",loginId,balance,null,null,per,0) , exp);
+			dao.insert(new Saving("",MembersService.loginId,balance,null,null,per,0) , exp);
 			System.out.println("===개설이 완료되었습니다===");
 		}
 		//계좌 번호 조회
@@ -49,12 +49,12 @@ public class SavingService {
 			String account_num = sc.next();
 			//계좌의 주인일 때도 조회.
 			Saving s = dao.selectByNum(account_num);
-			if(s.equals(null)|| !s.getId().equals(loginId)) {
-				System.out.println("조회 할 수 없는 계좌입니다.");
+			if (s == null) {
+				System.out.println("없는 계좌번호");
 				return;
-			}
+			} 
 			//조회시 날짜가 음수이면 > exprie 확인후 0이면 이자 지급
-			if(dao.getDate(account_num)<=0 && s.getExpiry()==0) {
+			if(dao.getExpDate(account_num)<=0 && s.getExpiry()==0) {
 				dao.updateExp(s);
 			}
 			System.out.println("1.입금하기 2.송금하기 3.계좌내역보기 4.계좌삭제하기");
@@ -62,13 +62,16 @@ public class SavingService {
 			switch (x) {
 			case 1:
 				//만기일 지나면 입금 막기
-				if(dao.getDate(account_num)>0) {
+				if(dao.getExpDate(account_num)>0) {
 					deposit(sc,s,account_num);
 					break;
 				}
 				System.out.println("만기일이 지나 입금 할 수 없습니다.");
 				break;
 			case 2:
+				if(dao.getExpDate(account_num)>0) {
+					System.out.println("만기 전 출금입니다.");
+				}
 				withdraw(sc,s, account_num);
 				break;
 			case 3:
@@ -80,22 +83,14 @@ public class SavingService {
 			}
 		}
 	//적금 조회(전체 조회)
-	public void printAll(Scanner sc) {
-		System.out.println("적금 계좌 확인");
-		ArrayList<Saving> list = dao.SelectAll(loginId);
+	public void printAll() {
+		System.out.println("===전체 적금 계좌===");
+		ArrayList<Saving> list = dao.SelectAll(MembersService.loginId);
 		if(list.isEmpty()) {
 			System.out.println("적금계좌가 존재하지 않습니다.");
 		}else {
 			for (Saving s : list) {
-				if (MembersService.auth == false) {// 은행원이 아니면
-					if (s.getId().equals(loginId)) {
-						// 로그인한 아이디와 같은 계좌들만 print
-						System.out.println(s);
-					}
-				} else {
-					// 은행원이면 전부 프린트
-					System.out.println(s);
-				}
+				System.out.println(s);
 			}
 		}
 	}
@@ -110,7 +105,7 @@ public class SavingService {
 		};
 		dao.update(money,account_num);
 		System.out.println("입금이 완료되었습니다.");
-		rs.addRecord(account_num,money, MembersService.name ,dao.selectByNum(account_num).getBalance(),1,loginId);
+		rs.addRecord(account_num,money, MembersService.name ,dao.selectByNum(account_num).getBalance(),1,MembersService.loginId);
 	}
 	//출금
 	public void withdraw(Scanner sc,Saving s, String account_num) {
@@ -126,7 +121,7 @@ public class SavingService {
 		} else {
 			dao.update(money * -1, account_num);
 			System.out.println("출금이 완료되었습니다.");
-			rs.addRecord(account_num,money*(-1), MembersService.name ,dao.selectByNum(account_num).getBalance(),2,loginId);
+			rs.addRecord(account_num,money*(-1), MembersService.name ,dao.selectByNum(account_num).getBalance(),2,MembersService.loginId);
 		}
 	}
 	
@@ -166,7 +161,7 @@ public class SavingService {
 		String account_num = sc.next();
 		//계좌의 주인일 때도 조회.
 		Saving s = dao.selectByNum(account_num);
-		if(s.equals(null)|| !s.getId().equals(loginId)) {
+		if(s.equals(null)|| !s.getId().equals(MembersService.loginId)) {
 			System.out.println("조회 할 수 없는 계좌입니다.");
 			return;
 		}
