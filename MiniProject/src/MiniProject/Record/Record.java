@@ -108,8 +108,12 @@ public class Record {
 
 	@Override
 	public String toString() {
-		return "Record [num=" + num + ", account_num=" + account_num + ", money=" + money + ", name=" + name
-				+ ", balnace=" + balnace + ", newDate=" + newDate + ", isDeposit=" + isDeposit + ", id=" + id + "]";
+		if(isDeposit==1) {
+			return num+". "+newDate+ "/"+name+"이 "+account_num+"번 계좌에 "+ money+"원 입금/ 잔액: "+balnace;
+		}else {
+			return num+". "+newDate+ "/"+name+"에게 "+account_num+"번 계좌에서 "+ money+"원 출금/ 잔액: "+balnace;
+			}
+		
 	}
 
 
