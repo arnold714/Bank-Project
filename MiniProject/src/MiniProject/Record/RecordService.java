@@ -52,6 +52,7 @@ public class RecordService {
 		      }
 		      
 		   }
+
 	
 //	getByDeposit: 입금에 해당하는 거래내역 출력	
 	public void getByDeposit(Scanner sc, String account_num) {
