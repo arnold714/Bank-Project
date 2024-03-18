@@ -43,14 +43,15 @@ public class RecordDao {
 
 
 //날짜별로 조회
-	public ArrayList<Record> selectByDate(String newDate,String account_num) {
+	public ArrayList<Record> selectByDate(String newDate,String newDate1, String account_num) {
 		Connection conn = db.conn();
-		String sql = "select * from Record where to_char(newDate, 'yy/mm/dd') = ? and account_num =? order by num";
+		String sql = "select * from Record where to_char(newDate, 'yy/mm/dd') = between ? and ? and and account_num =? order by num";
 		ArrayList<Record> list = new ArrayList<Record>();
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, newDate);
-			pstmt.setString(2, account_num);
+			pstmt.setString(2, newDate1);
+			pstmt.setString(3, account_num);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				list.add(new Record(rs.getInt(1),rs.getString(2),rs.getInt(3),rs.getString(4),rs.getInt(5),rs.getDate(6),rs.getInt(7),rs.getString(8)));
