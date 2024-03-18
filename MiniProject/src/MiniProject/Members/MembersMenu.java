@@ -116,7 +116,7 @@ public class MembersMenu {
 				mservice.printAll();
 				break;
 			case 2:
-				aservice.getAll();
+				aservice.getAllManager();
 				break;
 			case 3:
 				//거래내역보기

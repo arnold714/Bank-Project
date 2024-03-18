@@ -113,6 +113,41 @@ public class AccountDao {
 		}
 		return list;
 	}
+	public ArrayList<Account1> SelectById(String id) {
+		Connection conn = db.conn();
+		ArrayList<Account1> list = new ArrayList<Account1>();
+		String sql = "select * from account where id = ?";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Account1 account1 = new Account1();
+				account1.setAccount_num(rs.getString(1));
+				account1.setId(rs.getString(2));
+				account1.setBalance(rs.getInt(3));
+				account1.setDate(rs.getDate(4));
+				if(rs.getInt(5)==1) {
+					account1.setAllow(true);
+				}else {
+					account1.setAllow(false);
+				}
+				list.add(account1);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
 
 	// update
 	// 입금(입금 금액 추가)
