@@ -15,13 +15,18 @@ public class Record {
 	private int balnace;
 	//거래일
 	private Date newDate; 
+	//거래 구분: 예금 or 출금
+	private int isDeposit; //1이면 입금 ,2이면 출금
 	
+
+
 	public Record() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Record(int num, int account_num, int money, String name, int balnace, Date newDate) {
+
+	public Record(int num, int account_num, int money, String name, int balnace, Date newDate, int isDeposit) {
 		super();
 		this.num = num;
 		this.account_num = account_num;
@@ -29,6 +34,7 @@ public class Record {
 		this.name = name;
 		this.balnace = balnace;
 		this.newDate = newDate;
+		this.isDeposit = isDeposit;
 	}
 
 	public int getNum() {
@@ -78,12 +84,22 @@ public class Record {
 	public void setNewDate(Date newDate) {
 		this.newDate = newDate;
 	}
+	
+	public int getIsDeposit() {
+		return isDeposit;
+	}
+
+	public void setIsDeposit(int isDeposit) {
+		this.isDeposit = isDeposit;
+	}
+	
 
 	@Override
 	public String toString() {
 		return "Record [num=" + num + ", account_num=" + account_num + ", money=" + money + ", name=" + name
-				+ ", balnace=" + balnace + ", newDate=" + newDate + "]";
+				+ ", balnace=" + balnace + ", newDate=" + newDate + ", isDeposit=" + isDeposit + "]";
 	}
+
 	
 	
 	
