@@ -159,5 +159,62 @@ public class AccountDao {
 			}
 		}
 	}
+	
+	public void approval(String account_num) {//승인
+		// 계좌번호에 맞는거 탈퇴하기
+		Connection conn = db.conn();
+		String sql = "update account set approval = 1 where account_num=?";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, account_num);
+			pstmt.executeUpdate();
+			System.out.println("승인되었습니다.");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public ArrayList<Account1> SelectAllAccountApproval() {
+		Connection conn = db.conn();
+		ArrayList<Account1> list = new ArrayList<Account1>();
+		String sql = "select * from account where approval = 0";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Account1 account1 = new Account1();
+				account1.setAccount_num(rs.getString(1));
+				account1.setId(rs.getString(2));
+				account1.setBalance(rs.getInt(3));
+				account1.setDate(rs.getDate(4));
+				if(rs.getInt(5)==1) {
+					account1.setAllow(true);
+				}else {
+					account1.setAllow(false);
+				}
+				list.add(account1);
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return list;
+	}
 
 }

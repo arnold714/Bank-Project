@@ -29,21 +29,41 @@ public class AccountService {
 		} else {
 			if (MembersService.loginId.equals(account.getId())) {//
 				System.out.println(account);
-				System.out.println("1.입금하기 2.송금하기 3.계좌내역보기 4.계좌삭제하기");
+				System.out.println("1.입금하기 2.출금하기 3.송금하기 4.계좌내역보기 5.계좌삭제하기");
 				int x = sc.nextInt();
 				switch (x) {
 				case 1:
+					if(account.getAllow()==false) {
+						System.out.println("승인되지 않은 계좌입니다.");
+						break;
+					}
 					deposit(sc, account_num);
 					System.out.println(dao.selectByNum(account_num));
 					break;
 				case 2:
+					if(account.getAllow()==false) {
+						System.out.println("승인되지 않은 계좌입니다.");
+						break;
+					}
 					withdraw(sc, account_num);
 					System.out.println(dao.selectByNum(account_num));
 					break;
 				case 3:
-					// 계좌내역보기
+					if(account.getAllow()==false) {
+						System.out.println("승인되지 않은 계좌입니다.");
+						break;
+					}
+					remittance(sc, account_num);
+					System.out.println(dao.selectByNum(account_num));
 					break;
 				case 4:
+					if(account.getAllow()==false) {
+						System.out.println("승인되지 않은 계좌입니다.");
+						break;
+					}
+					// 계좌내역보기
+					break;
+				case 5:
 					delAccount(account_num);
 					break;
 				}
@@ -80,8 +100,9 @@ public class AccountService {
 		while (money < 0) {
 			System.out.println("다시 입력해 주십시오.");
 			money = sc.nextInt();
-		};
-		dao.update(money,account_num);
+		}
+		;
+		dao.update(money, account_num);
 		System.out.println("입금이 완료되었습니다.");
 	}
 
@@ -89,15 +110,37 @@ public class AccountService {
 		System.out.println("==출금==");
 		System.out.println("얼마를 출금하시겠습니까?");
 		int money = sc.nextInt();
-		while(money<0) {
+		while (money < 0) {
 			System.out.println("다시 입력해 주십시오.");
 			money = sc.nextInt();
 		}
 		if (dao.selectByNum(account_num).getBalance() < money) {
 			System.out.println("계좌에 잔액이 부족합니다.");
 		} else {
-			dao.update(money*-1,account_num);
+			dao.update(money * -1, account_num);
 			System.out.println("출금이 완료되었습니다.");
+		}
+	}
+
+	public void remittance(Scanner sc, String account_num) {
+		System.out.println("==송금==");
+		System.out.println("송금받을 계좌를 입력해 주십시오.");
+		String remit_num = sc.next();
+		System.out.println(MembersService.name + "님에게 송금하시겠습니까? 1.예 2.아니오");
+		if (sc.nextInt() == 1) {
+			System.out.println("얼마를 출금하시겠습니까?");
+			int money = sc.nextInt();
+			while (money < 0) {
+				System.out.println("다시 입력해 주십시오.");
+				money = sc.nextInt();
+			}
+			if (dao.selectByNum(account_num).getBalance() < money) {
+				System.out.println("계좌에 잔액이 부족합니다.");
+			} else {
+				dao.update(money * -1, account_num);
+				dao.update(money, remit_num);
+				System.out.println("이체가 완료되었습니다.");
+			}
 		}
 	}
 
@@ -110,4 +153,29 @@ public class AccountService {
 			System.out.println("계좌에 잔액이 없어야 삭제할 수 있습니다.");
 		}
 	}
+
+	
+	public void getAccountApproval(Scanner sc) {
+		Boolean flag = true;
+		while (flag) {
+			System.out.println("1.승인대기 계좌보기 2.계좌승인하기 3.종료");
+			int m = sc.nextInt();
+			switch (m) {
+			case 1:
+				for(Account1 a : dao.SelectAllAccountApproval()) {
+					System.out.println(a);
+				}
+				;
+				break;
+			case 2:
+				System.out.println("승인할 계좌를 입력하시오");
+				dao.approval(sc.next());
+				break;
+			case 3:
+				flag = false;
+				break;
+			}
+		}
+	}
+	
 }

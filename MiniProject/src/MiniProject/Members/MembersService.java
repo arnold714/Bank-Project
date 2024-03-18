@@ -8,6 +8,7 @@ public class MembersService {
 	private MembersDao dao;
 	public static String loginId;
 	public static boolean auth;
+	public static String name;
 
 	public MembersService() {
 		dao = new MembersDao();
@@ -46,6 +47,7 @@ public class MembersService {
 				System.out.println("로그인 성공");
 				loginId = id;
 				auth = dao.select(id).getAuth();
+				name = dao.select(id).getName();
 				flag = true;
 			} else {
 				System.out.println("패스워드 실패");
@@ -98,12 +100,34 @@ public class MembersService {
 		}
 	}
 
-//	// 회원목록
-//	public void printAll() {
-//		ArrayList<Members> list = dao.selectAll();
-//		System.out.println("=== 회원목록 ===");
-//		for (Members m : list) {
-//			System.out.println(m);
-//		}
-//	}
+	// 회원목록
+	public void printAll() {
+		ArrayList<Members> list = dao.selectAll();
+		System.out.println("=== 회원목록 ===");
+		for (Members m : list) {
+			System.out.println(m);
+		}
+	}
+	
+	public void membersApproval(Scanner sc) {
+		Boolean flag = true;
+		while (flag) {
+			System.out.println("1.승인대기인원 보기 2.관리자승인 3.종료");
+			int m = sc.nextInt();
+			switch (m) {
+			case 1:
+				for(Members mem : dao.selectAllApproval()) {
+					System.out.println(mem);
+				}
+				break;
+			case 2:
+				System.out.println("관리자로 전환할 멤버 id를 입력하시오");
+				dao.allow(sc.next());
+				break;
+			case 3:
+				flag = false;
+				break;
+			}
+		}
+	}
 }
