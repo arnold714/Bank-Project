@@ -67,7 +67,7 @@ public class AccountService {
 						System.out.println("승인되지 않은 계좌입니다.");
 						break;
 					}
-					rs.getAll(account_num);
+					runRecord(sc, account_num);
 					// 계좌내역보기
 					break;
 				case 5:
@@ -160,10 +160,10 @@ public class AccountService {
 					// 입금 받을 사람(+//입금)
 					// 계좌받기,금액 받기
 					// 자동용>입금자의 이름,잔액,아이디
-					rs.addRecord(remit_num, money, mdao.select(dao.selectByNum(remit_num).getId()).getName(),
+					rs.addRecord(remit_num, money,  MembersService.name,
 							dao.selectByNum(remit_num).getBalance(), 1, dao.selectByNum(remit_num).getId());
 					// 입금 하는 사람(-//출금)
-					rs.addRecord(account_num, money * (-1), MembersService.name,
+					rs.addRecord(account_num, money * (-1),mdao.select(dao.selectByNum(remit_num).getId()).getName(),
 							dao.selectByNum(account_num).getBalance(), 2, MembersService.loginId);
 				}
 			}
@@ -204,5 +204,25 @@ public class AccountService {
 			}
 		}
 	}
-
+	public void runRecord(Scanner sc,String account_num)	{
+		boolean flag = true;
+		while(flag) {
+			System.out.println("1.전체 조회 2.입출금으로 조회 3.날짜로 조회 4.종료");
+			int m = sc.nextInt();
+			switch(m) {
+			case 1:
+				rs.getAll(account_num);
+				break;
+			case 2:
+				rs.getByDeposit(sc, account_num);
+				break;
+			case 3:
+				rs.getByDate(sc, account_num);
+				break;
+			case 4:
+				flag = false;
+				break;
+			}
+		}
+	}
 }

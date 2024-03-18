@@ -3,14 +3,18 @@ package MiniProject.Members;
 import java.util.Scanner;
 
 import Accounting.AccountService;
+import MiniProject.Record.RecordService;
 
 public class MembersMenu {
 	private MembersService mservice;
 	private AccountService aservice;
+	private RecordService rservice;
+	
 	
 	public MembersMenu() {
 		mservice = new MembersService();
 		aservice = new AccountService();
+		rservice = new RecordService();
 	}
 	
 	public void run(Scanner sc) {
@@ -109,7 +113,7 @@ public class MembersMenu {
 	public void runManager(Scanner sc) {
 		boolean flag = true;
 		while(flag) {
-			System.out.println("1.전회원 보기 2.전계좌 보기 3.모든거래내역 보기 4.승인업무처리 5.종료");
+			System.out.println("1.전회원 보기 2.전계좌 보기 3.거래내역보기 4.승인업무처리 5.종료");
 			int m = sc.nextInt();
 			switch(m) {
 			case 1:
@@ -149,4 +153,6 @@ public class MembersMenu {
 			}
 		}
 	}
+	
+	
 }

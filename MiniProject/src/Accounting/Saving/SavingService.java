@@ -72,7 +72,7 @@ public class SavingService {
 				withdraw(sc,s, account_num);
 				break;
 			case 3:
-				// 계좌내역보기
+				runRecord(sc, account_num);
 				break;
 			case 4:
 				delSaving(account_num);
@@ -181,6 +181,27 @@ public class SavingService {
 			System.out.println("삭제가 완료되었습니다");
 		} else {
 			System.out.println("계좌에 잔액이 없어야 삭제할 수 있습니다.");
+		}
+	}
+	public void runRecord(Scanner sc,String account_num)	{
+		boolean flag = true;
+		while(flag) {
+			System.out.println("1.전체 조회 2.입출금으로 조회 3.날짜로 조회 4.종료");
+			int m = sc.nextInt();
+			switch(m) {
+			case 1:
+				rs.getAll(account_num);
+				break;
+			case 2:
+				rs.getByDeposit(sc, account_num);
+				break;
+			case 3:
+				rs.getByDate(sc, account_num);
+				break;
+			case 4:
+				flag = false;
+				break;
+			}
 		}
 	}
 }
