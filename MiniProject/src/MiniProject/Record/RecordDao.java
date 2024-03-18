@@ -20,7 +20,7 @@ public class RecordDao {
 	public void insert(Record r) {
 		Connection conn = db.conn();
 		//번호, 계좌번호, 금액, 이름, 잔액, 날짜, 입출금
-		String sql = "insert into Record values(seq.nextvalue,?,?,?,?,sysdate,?,?)";
+		String sql = "insert into Record values(seq.NEXTVAL,?,?,?,?,sysdate,?,?)";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, r.getAccount_num());
@@ -29,7 +29,7 @@ public class RecordDao {
 			pstmt.setInt(4, r.getBalnace());
 			pstmt.setInt(5, r.getIsDeposit());
 			pstmt.setString(6, r.getId());
-			pstmt.executeUpdate();
+			int cnt = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
