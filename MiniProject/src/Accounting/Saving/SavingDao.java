@@ -22,15 +22,15 @@ public class SavingDao{
 		Connection conn = db.conn();
 		//Account_num(계좌번호),String id(계좌주),int balance(잔액),Date date(가입일),
 		//Date expDate(만기일),double doublePercent(이자율)
-		String sql = "insert into Saving values(seq_account.nextval,?,?,sysdate,add_months(sysdate,?),?,0)";
+		String sql = "insert into Saving values(?,?,?,sysdate,add_months(sysdate,?),?,0)";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, s.getId());
-			pstmt.setInt(2, s.getBalance());
-			pstmt.setInt(3, num);
-			pstmt.setDouble(4, s.getDoublepercent());
-			int cnt = pstmt.executeUpdate();
-			System.out.println(s.getBalance() + "개설 되었습니다.");
+			pstmt.setString(1, s.getAccount_num());
+			pstmt.setString(2, s.getId());
+			pstmt.setInt(3, s.getBalance());
+			pstmt.setInt(4, num);
+			pstmt.setDouble(5, s.getDoublepercent());
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

@@ -3,6 +3,8 @@ package Accounting;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import Accounting.Saving.SavingDao;
+import MiniProject.Bank.BankDao;
 import MiniProject.Members.MembersDao;
 import MiniProject.Members.MembersService;
 import MiniProject.Record.RecordService;
@@ -11,16 +13,21 @@ public class AccountService {
 	private AccountDao dao;
 	private RecordService rs;
 	private MembersDao mdao;
+	private BankDao bdao;
+	private SavingDao sdao;
 
 	public AccountService() {
 		dao = new AccountDao();
 		rs = new RecordService();
 		mdao = new MembersDao();
+		bdao = new BankDao();
+		sdao = new SavingDao();
 	}
 
 	public void addAccount(String id) {
 		System.out.println("===계좌추가===");
-		dao.insert();
+		String account_num = bdao.insert(1);
+		dao.insert(account_num);
 		System.out.println("===개설이 완료되었습니다===");
 		System.out.println("===사용전 관리자의 승인이 필요하니다===");
 	}
@@ -141,9 +148,43 @@ public class AccountService {
 		System.out.println("==송금==");
 		System.out.println("송금받을 계좌를 입력해 주십시오.");
 		String remit_num = sc.next();
-		if (dao.selectByNum(remit_num).getAllow() != false) {
+
+		if (bdao.select(remit_num).getIsAccount() == 1) {
+			if (dao.selectByNum(remit_num).getAllow() != false) {
+				int money = 0;
+				System.out
+						.println(mdao.select(dao.selectByNum(remit_num).getId()).getName() + "님에게 송금하시겠습니까? 1.예 2.아니오");
+				if (sc.nextInt() == 1) {
+					System.out.println("얼마를 출금하시겠습니까?");
+					money = sc.nextInt();
+					while (money < 0) {
+						System.out.println("다시 입력해 주십시오.");
+						money = sc.nextInt();
+					}
+					if (dao.selectByNum(account_num).getBalance() < money) {
+						System.out.println("계좌에 잔액이 부족합니다.");
+					} else {
+						dao.update(money, remit_num);
+						dao.update(money * -1, account_num);
+
+						System.out.println("이체가 완료되었습니다.");
+						// 입금 받을 사람(+//입금)
+						// 계좌받기,금액 받기
+						// 자동용>입금자의 이름,잔액,아이디
+						rs.addRecord(remit_num, money, MembersService.name, dao.selectByNum(remit_num).getBalance(), 1,
+								dao.selectByNum(remit_num).getId());
+						// 입금 하는 사람(-//출금)
+						rs.addRecord(account_num, money * (-1),
+								mdao.select(dao.selectByNum(remit_num).getId()).getName(),
+								dao.selectByNum(account_num).getBalance(), 2, MembersService.loginId);
+					}
+				}
+			} else {
+				System.out.println("승인되지 않은 계좌입니다.");
+			}
+		} else if (bdao.select(remit_num).getIsAccount() == 2) {
 			int money = 0;
-			System.out.println(mdao.select(dao.selectByNum(remit_num).getId()).getName() + "님에게 송금하시겠습니까? 1.예 2.아니오");
+			System.out.println(mdao.select(sdao.selectByNum(remit_num).getId()).getName() + "님에게 송금하시겠습니까? 1.예 2.아니오");
 			if (sc.nextInt() == 1) {
 				System.out.println("얼마를 출금하시겠습니까?");
 				money = sc.nextInt();
@@ -154,21 +195,20 @@ public class AccountService {
 				if (dao.selectByNum(account_num).getBalance() < money) {
 					System.out.println("계좌에 잔액이 부족합니다.");
 				} else {
+					sdao.update(money, remit_num);
 					dao.update(money * -1, account_num);
-					dao.update(money, remit_num);
+
 					System.out.println("이체가 완료되었습니다.");
 					// 입금 받을 사람(+//입금)
 					// 계좌받기,금액 받기
 					// 자동용>입금자의 이름,잔액,아이디
-					rs.addRecord(remit_num, money,  MembersService.name,
-							dao.selectByNum(remit_num).getBalance(), 1, dao.selectByNum(remit_num).getId());
+					rs.addRecord(remit_num, money, MembersService.name, sdao.selectByNum(remit_num).getBalance(), 1,
+							sdao.selectByNum(remit_num).getId());
 					// 입금 하는 사람(-//출금)
-					rs.addRecord(account_num, money * (-1),mdao.select(dao.selectByNum(remit_num).getId()).getName(),
+					rs.addRecord(account_num, money * (-1), mdao.select(sdao.selectByNum(remit_num).getId()).getName(),
 							dao.selectByNum(account_num).getBalance(), 2, MembersService.loginId);
 				}
 			}
-		} else {
-			System.out.println("승인되지 않은 계좌입니다.");
 		}
 	}
 
@@ -204,12 +244,13 @@ public class AccountService {
 			}
 		}
 	}
-	public void runRecord(Scanner sc,String account_num)	{
+
+	public void runRecord(Scanner sc, String account_num) {
 		boolean flag = true;
-		while(flag) {
+		while (flag) {
 			System.out.println("1.전체 조회 2.입출금으로 조회 3.날짜로 조회 4.종료");
 			int m = sc.nextInt();
-			switch(m) {
+			switch (m) {
 			case 1:
 				rs.getAll(account_num);
 				break;

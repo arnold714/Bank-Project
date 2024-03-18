@@ -18,14 +18,15 @@ public class AccountDao {
 
 	// insert
 	// 계좌 추가(상품 가입)
-	public void insert() {
+	public void insert(String account_num) {
 		Connection conn = db.conn();
 		// account_num, id, balance, signdate, approval
-		String sql = "insert into account values(seq_account.nextval,?,0,default,0)";
+		String sql = "insert into account values(?,?,0,default,0)";
 		PreparedStatement pstmt;
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, MembersService.loginId);
+			pstmt.setString(1, account_num);
+			pstmt.setString(2, MembersService.loginId);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -38,7 +39,6 @@ public class AccountDao {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	// 계좌번호로 조회
