@@ -36,11 +36,12 @@ public class RecordService {
 	}
 	
 //	getByDate: 날짜에 해당하는 거래내역 출력
-	public void getByDate(Scanner sc,String account_num) {
+	public void getByDate(Scanner sc, Scanner sc1, String account_num) {
 		System.out.println("=== 해당 날짜 거래내역 조회 ===");
 		System.out.println("거래일(년/월/일):");
 		String date = sc.next();
-		ArrayList<Record> list = dao.selectByDate(date,account_num);
+		String date1 = sc1.next();
+		ArrayList<Record> list = dao.selectByDate(date,date1, account_num);
 		if (list.isEmpty()) {
 			System.out.println("검색된 결과 없음");
 		} else {
