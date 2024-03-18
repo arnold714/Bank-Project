@@ -107,8 +107,7 @@ public class AccountService {
 		while (money < 0) {
 			System.out.println("다시 입력해 주십시오.");
 			money = sc.nextInt();
-		}
-		;
+		};
 		dao.update(money, account_num);
 		System.out.println("입금이 완료되었습니다.");
 		rs.addRecord(account_num,money, MembersService.name ,dao.selectByNum(account_num).getBalance(),1,MembersService.loginId);

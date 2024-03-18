@@ -19,7 +19,8 @@ public class RecordDao {
 	// 거래 내역 추가
 	public void insert(Record r) {
 		Connection conn = db.conn();
-		String sql = "insert into Record values(seq.nextvalue,?,?,?,?,sysdate,?)";
+		//번호, 계좌번호, 금액, 이름, 잔액, 날짜, 입출금
+		String sql = "insert into Record values(seq.nextvalue,?,?,?,?,sysdate,?,?)";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, r.getAccount_num());
@@ -27,6 +28,7 @@ public class RecordDao {
 			pstmt.setString(3, r.getName());
 			pstmt.setInt(4, r.getBalnace());
 			pstmt.setInt(5, r.getIsDeposit());
+			pstmt.setString(6, r.getId());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

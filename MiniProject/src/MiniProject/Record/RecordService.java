@@ -13,6 +13,11 @@ public class RecordService {
 	}
 
 //	addRecord: 거래내역 추가
+	public void addRecord(String account_num) {
+		System.out.println("추가됨");
+	}
+
+	//번호, 계좌번호, 금액, 이름, 잔액, 날짜, 입출금
 	public void addRecord(String account_num,int money, String name,int balnace,int isDeposit,String id) {
 		dao.insert(new Record(0, account_num, money, name, balnace, null, isDeposit,id));
 	}
