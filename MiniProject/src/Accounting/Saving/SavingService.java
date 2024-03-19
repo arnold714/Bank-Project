@@ -231,6 +231,7 @@ public class SavingService {
 		System.out.println("===삭제===");
 		if (dao.selectByNum(num).getBalance() == 0) {
 			dao.delete(num);
+			bdao.delete(num);
 			System.out.println("삭제가 완료되었습니다");
 		} else {
 			System.out.println("계좌에 잔액이 없어야 삭제할 수 있습니다.");

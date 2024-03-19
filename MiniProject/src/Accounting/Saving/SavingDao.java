@@ -147,8 +147,7 @@ public class SavingDao{
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, num);
-			cnt = pstmt.executeUpdate();
-			System.out.println(num+ "계좌 탈회가 완료되었습니다.");
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
