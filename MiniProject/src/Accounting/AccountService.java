@@ -130,6 +130,7 @@ public class AccountService {
 		System.out.println("==출금==");
 		System.out.println("얼마를 출금하시겠습니까?");
 		int money = sc.nextInt();
+		int type = 0;
 		while (money < 0) {
 			System.out.println("다시 입력해 주십시오.");
 			money = sc.nextInt();

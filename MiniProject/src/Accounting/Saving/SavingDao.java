@@ -127,7 +127,7 @@ public class SavingDao{
 	//만기 이자 추가
 	public void updateExp(Saving s) {
 		Connection conn = db.conn();
-		String sql = "update saving set balance=balance+balance*Round(percent*(MONTHS_BETWEEN(expDate , newdate))/12,2), expiry=1 where account_num=?";
+		String sql = "update saving set balance=balance+balance*Round(percent*(MONTHS_BETWEEN(expDate , newdate))/12,2), empiry=1 where account_num=?";
 		int cnt = 0;
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
